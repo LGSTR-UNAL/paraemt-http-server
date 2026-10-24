@@ -13,7 +13,7 @@ Spec:
 
     {
       "system": "ieee39", "n": 1000, "seed": 1, "method": "monte_carlo",   # or "lhs", "grid"
-      "fixed": {"t_end": 3.0},
+      "fixed": {"t_end": 10.0},
       "params": {
         "gen_index": {"dist": "int_uniform", "low": 0, "high": 9},
         "gen_step":  {"dist": "int_uniform_excluding", "low": 0, "high": 9, "exclude": "gen_index"},

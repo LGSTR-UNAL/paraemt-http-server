@@ -12,18 +12,28 @@ Campaign requests return a `run_id` and the number of generated requests after K
 publication. Each message includes its UUID, `run_id`, parameters, and `fecha`, the creation time
 encoded as epoch milliseconds for Kafka Connect.
 
-Example:
+The included campaign is for the IEEE 39 bus system and generates 1,000 paired event cases with
+Monte Carlo sampling. It selects the tripped generator uniformly from the ten machines and the
+governor step generator uniformly from the other nine. The trip time is sampled uniformly from
+0.3 to 1.0 s, the step time from 0.3 to 1.5 s, and the step magnitude from −0.15 to +0.15 pu.
+The simulation horizon is 10 s, so both event orderings are represented. The fixed seed and
+complete specification are in [`examples/campaign_ieee39.json`](examples/campaign_ieee39.json).
+
+Example request body:
 
 ```json
 {
-  "system": "ieee9",
-  "n": 2,
-  "seed": 42,
+  "system": "ieee39",
+  "n": 1000,
+  "seed": 1,
   "method": "monte_carlo",
-  "fixed": {"t_end": 1.0},
+  "fixed": {"t_end": 10.0},
   "params": {
-    "gen_index": {"dist": "int_uniform", "low": 0, "high": 2},
-    "t_trip": {"dist": "uniform", "low": 0.2, "high": 0.8, "round": 3}
+    "gen_index": {"dist": "int_uniform", "low": 0, "high": 9},
+    "gen_step": {"dist": "int_uniform_excluding", "low": 0, "high": 9, "exclude": "gen_index"},
+    "t_trip": {"dist": "uniform", "low": 0.3, "high": 1.0, "round": 3},
+    "t_step": {"dist": "uniform", "low": 0.3, "high": 1.5, "round": 3},
+    "dsp": {"dist": "uniform", "low": -0.15, "high": 0.15, "round": 4}
   }
 }
 ```
