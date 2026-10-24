@@ -1,0 +1,4 @@
+fastapi
+uvicorn[standard]
+confluent-kafka==2.16.0
+numpy
